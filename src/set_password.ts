@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/local/bin/bun
 
 import crypto from "crypto";
 import fs from "fs";

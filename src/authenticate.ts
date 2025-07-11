@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/local/bin/bun
 
 const doc = `
 Log into Foundry Virtual Tabletop website, and save cookies to file.
@@ -9,8 +9,8 @@ EXIT STATUS
     >0  An error occurred.
 
 Usage:
-  authenticate.js [options] <username> <password> <cookiejar>
-  authenticate.js (-h | --help)
+  authenticate.ts [options] <username> <password> <cookiejar>
+  authenticate.ts (-h | --help)
 
 Options:
   -h --help              Show this message.
@@ -25,7 +25,7 @@ Options:
 import { CookieJar, Cookie } from "tough-cookie";
 import { FileCookieStore } from "tough-cookie-file-store";
 import * as cheerio from "cheerio";
-import createLogger from "./logging.js";
+import createLogger from "./logging.ts";
 import winston from "winston";
 import docopt from "docopt";
 import fetchCookie from "fetch-cookie";

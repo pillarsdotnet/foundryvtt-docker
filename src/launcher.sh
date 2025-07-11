@@ -23,7 +23,7 @@ if [[ "${CONTAINER_PRESERVE_CONFIG:-}" == "true" && -f "${CONFIG_FILE}" ]]; then
 else
   # Update configuration file
   log "Generating options.json file."
-  ./set_options.js > "${CONFIG_FILE}"
+  ./set_options.ts > "${CONFIG_FILE}"
 fi
 
 if [[ "${CONTAINER_PRESERVE_CONFIG:-}" == "true" && -f "${ADMIN_KEY_FILE}" ]]; then
@@ -32,7 +32,7 @@ else
   # Save admin access key to file if set.  Delete file if unset.
   if [[ "${FOUNDRY_ADMIN_KEY:-}" ]]; then
     log "Setting 'Admin Access Key'."
-    echo "${FOUNDRY_ADMIN_KEY}" | ./set_password.js > "${ADMIN_KEY_FILE}"
+    echo "${FOUNDRY_ADMIN_KEY}" | ./set_password.ts > "${ADMIN_KEY_FILE}"
   else
     log_warn "No 'Admin Access Key' has been configured."
     rm "${ADMIN_KEY_FILE}" >&/dev/null || true
@@ -65,4 +65,4 @@ done < <(env -0)
 log "Starting Foundry Virtual Tabletop."
 # We want ENV_VAR_CARRY_LIST to word split
 # shellcheck disable=SC2086
-exec env -i $ENV_VAR_CARRY_LIST /usr/local/bin/node "$@" || log_error "Exec failed with code $?"
+exec env -i $ENV_VAR_CARRY_LIST bun "$@" || log_error "Exec failed with code $?"

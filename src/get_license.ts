@@ -1,8 +1,8 @@
-#!/usr/bin/env node
+#!/usr/local/bin/bun
 
 const doc = `
 Retrieve a Foundry Virtual Tabletop license key from a user's account using
-cookies from authenticate.js.
+cookies from authenticate.ts.
 
 The utility will print a license key to standard out.
 
@@ -12,8 +12,8 @@ EXIT STATUS
     >0  An error occurred.
 
 Usage:
-  get_license.js [options] <cookiejar>
-  get_license.js (-h | --help)
+  get_license.ts [options] <cookiejar>
+  get_license.ts (-h | --help)
 
 Options:
   -h --help              Show this message.
@@ -33,7 +33,7 @@ Options:
 import { CookieJar } from "tough-cookie";
 import { FileCookieStore } from "tough-cookie-file-store";
 import * as cheerio from "cheerio";
-import createLogger from "./logging.js";
+import createLogger from "./logging.ts";
 import docopt from "docopt";
 import fetchCookie from "fetch-cookie";
 import nodeFetch, { Headers } from "node-fetch";

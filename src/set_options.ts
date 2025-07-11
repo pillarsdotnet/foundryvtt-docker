@@ -1,7 +1,6 @@
-#!/usr/bin/env node
+#!/usr/local/bin/bun
 
 const DATA_PATH: string = "/data";
-const FOUNDRY_PORT: number = 30000;
 const LANGUAGE: string = "en.core";
 const MAXIMUM_PORT: number = 65535;
 const MINIMUM_PORT: number = 1;
@@ -50,8 +49,8 @@ let options: object = {
   language: process.env.FOUNDRY_LANGUAGE || LANGUAGE,
   localHostname: process.env.FOUNDRY_LOCAL_HOSTNAME || null,
   passwordSalt: process.env.FOUNDRY_PASSWORD_SALT || null,
-  port: FOUNDRY_PORT,
-  protocol: process.env.FOUNDRY_PROTOCOL || null,
+  port: 30000,
+  protocol: parseInt(process.env.FOUNDRY_PROTOCOL) || null,
   proxyPort: clampEnv(
     process.env.FOUNDRY_PROXY_PORT,
     MINIMUM_PORT,

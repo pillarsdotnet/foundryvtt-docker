@@ -7,9 +7,12 @@ Dockerfile-x
 
 ## FoundryVTT ##
 cookiejar.json
+data/*
 license.json
+secrets.json
 
 ## Javascript / Typescript ##
+bun.lock
 dist
 node_modules
 

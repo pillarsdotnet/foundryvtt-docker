@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/local/bin/bun
 
 import { readFileSync, writeFileSync } from "fs";
 

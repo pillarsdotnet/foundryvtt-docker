@@ -96,7 +96,7 @@ node_user_agent="node-fetch ${CONTAINER_USER_AGENT_COMMENT}"
 # Warn user if the container version does not start with the FOUNDRY_VERSION.
 # The FOUNDRY_VERSION looks like x.yyy
 # The container version is a semver x.y.z
-if [[ ${image_version%.*} != "${FOUNDRY_VERSION}" ]]; then
+if [[ "${image_version%.*}" != "${FOUNDRY_VERSION}" ]]; then
   log_warn "FOUNDRY_VERSION has been manually set and does not match the container's version."
   log_warn "Expected ${image_version%.*} but found ${FOUNDRY_VERSION}"
   log_warn "The container may not function properly with this version mismatch."
@@ -151,9 +151,9 @@ if [ $install_required = true ]; then
     # If credentials are provided attempt authentication.
     # The resulting cookiejar is used to get a release URL or license.
 
-    # Temporarily disable errexit to capture failure from authenticate.js
+    # Temporarily disable errexit to capture failure from authenticate.ts
     set +e
-    ./authenticate.js ${CONTAINER_VERBOSE+--log-level=debug} \
+    ./authenticate.ts ${CONTAINER_VERBOSE+--log-level=debug} \
       --user-agent="${node_user_agent}" \
       "${FOUNDRY_USERNAME}" "${FOUNDRY_PASSWORD}" "${cookiejar_file}"
     auth_exit_code=$?
@@ -165,7 +165,7 @@ if [ $install_required = true ]; then
     elif [[ ! "${presigned_url:-}" ]]; then
       # If the presigned_url wasn't set by FOUNDRY_RELEASE_URL generate one now.
       log "Using authenticated credentials to fetch release URL."
-      presigned_url=$(./get_release_url.js ${CONTAINER_VERBOSE+--log-level=debug} \
+      presigned_url=$(./get_release_url.ts ${CONTAINER_VERBOSE+--log-level=debug} \
         ${CONTAINER_URL_FETCH_RETRY+--retry=${CONTAINER_URL_FETCH_RETRY}} \
         --user-agent="${node_user_agent}" \
         "${cookiejar_file}" "${FOUNDRY_VERSION}")
@@ -331,7 +331,7 @@ END_OF_LINE
     if [ -d "${CONTAINER_PATCHES}" ]; then
       log "Container patches directory detected.  Starting patch application..."
       shopt -s nullglob # if the directory is empty we want an empty array
-      patch_files=("${CONTAINER_PATCHES}"/*)
+      patch_files=("${CONTAINER_PATCHES}"/*.sh)
       shopt -u nullglob
       for f in "${patch_files[@]}"; do
         [ -f "$f" ] || continue # skip non-files
@@ -347,7 +347,7 @@ END_OF_LINE
 
   # Modify update and config warnings to be container-specific.
   log_debug "Patching GUI update and configuration messages."
-  ./patch_lang.js
+  ./patch_lang.ts
 fi # install required
 
 if [ ! -f "${LICENSE_FILE}" ]; then
@@ -366,13 +366,13 @@ if [ ! -f "${LICENSE_FILE}" ]; then
       # FOUNDRY_LICENSE_KEY can be an index, try passing it.
       # CONTAINER_VERBOSE default value should not be quoted.
       # shellcheck disable=SC2086
-      fetched_license_key=$(./get_license.js ${CONTAINER_VERBOSE+--log-level=debug} \
+      fetched_license_key=$(./get_license.ts ${CONTAINER_VERBOSE+--log-level=debug} \
         --user-agent="${node_user_agent}" \
         --select="${FOUNDRY_LICENSE_KEY}" \
         "${cookiejar_file}")
     else
       # shellcheck disable=SC2086
-      fetched_license_key=$(./get_license.js ${CONTAINER_VERBOSE+--log-level=debug} \
+      fetched_license_key=$(./get_license.ts ${CONTAINER_VERBOSE+--log-level=debug} \
         --user-agent="${node_user_agent}" \
         "${cookiejar_file}")
     fi
