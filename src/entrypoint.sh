@@ -394,6 +394,17 @@ log "Starting launcher."
 trap handle_sigterm TERM
 ./launcher.sh "$@" &
 child_pid=$!
+
+# Agree to license terms if necessary.
+BASE_URL="http://localhost:30000"
+if ! grep -q signature ${LICENSE_FILE}; then
+  LICENSE_URL="${BASE_URL}/license"
+  log "Agreeing to license terms at ${LICENSE_URL}"
+  curl -F accept=1 --retry 5 --retry-all-errors -s \
+    "${LICENSE_URL}"
+fi
+
+# Wait for foundry to exit.
 log_debug "Waiting for child pid: ${child_pid} to exit."
 wait "$child_pid"
 exit_code=$?
