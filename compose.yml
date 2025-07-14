@@ -43,7 +43,7 @@ services:
       # - FOUNDRY_ROUTE_PREFIX=
       # - FOUNDRY_SSL_CERT=
       # - FOUNDRY_SSL_KEY=
-      # - FOUNDRY_TELEMETRY=
+      - FOUNDRY_TELEMETRY=false
       # - FOUNDRY_UPNP=false
       # - FOUNDRY_UPNP_LEASE_DURATION=
       - FOUNDRY_VERSION=13.346
