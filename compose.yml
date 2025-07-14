@@ -28,6 +28,8 @@ services:
       #   "resetSeconds": 3600
       #   }
       - FOUNDRY_COMPRESS_WEBSOCKET=true
+      - FOUNDRY_EXTENSIONS=
+        https://raw.githubusercontent.com/foundryvtt/dnd5e/master/system.json
       - FOUNDRY_HOSTNAME=foundry.bobvincent.com
       # - FOUNDRY_HOT_RELOAD=false
       # - FOUNDRY_IP_DISCOVERY=

@@ -395,13 +395,57 @@ trap handle_sigterm TERM
 ./launcher.sh "$@" &
 child_pid=$!
 
-# Agree to license terms if necessary.
+# Agree to license terms, sign in, and install packages.
 BASE_URL="http://localhost:30000"
 if ! grep -q signature ${LICENSE_FILE}; then
   LICENSE_URL="${BASE_URL}/license"
-  log "Agreeing to license terms at ${LICENSE_URL}"
-  curl -F accept=1 --retry 5 --retry-all-errors -s \
+  log "Agreeing to license terms."
+  curl \
+    --cookie "${cookiejar_file}" \
+    --cookie-jar "${cookiejar_file}" \
+    --data "accept=1" \
+    --retry 5 \
+    --retry-all-errors \
+    --silent \
+    --user-agent "${curl_user_agent}" \
     "${LICENSE_URL}"
+  # Admin login.
+  log "Logging in as server administrator."
+  curl \
+    --cookie "${cookiejar_file}" \
+    --cookie-jar "${cookiejar_file}" \
+    --data "adminPassword=${FOUNDRY_ADMIN_KEY}" \
+    --data "action=adminAuth" \
+    --silent \
+    "${BASE_URL}/auth"
+  # Install systems and modules.
+  SETUP_URL="http://localhost:30000/setup"
+  for SYSTEM in $FOUNDRY_PKG_SYS; do
+    log "Installing system: ${SYSTEM}"
+    curl \
+      --cookie "${cookiejar_file}" \
+      --cookie-jar "${cookiejar_file}" \
+      --data "action=installPackage" \
+      --data "force=false" \
+      --data "manifest=${SYSTEM}" \
+      --data "type=system" \
+      --retry 3 \
+      --silent \
+      "${SETUP_URL}"
+  done
+  for MODULE in $FOUNDRY_PKG_MOD; do
+    log "Installing module: ${MODULE}"
+    curl \
+      --cookie "${cookiejar_file}" \
+      --cookie-jar "${cookiejar_file}" \
+      --data "action=installPackage" \
+      --data "force=false" \
+      --data "manifest=${MODULE}" \
+      --data "type=module" \
+      --retry 3 \
+      --silent \
+      "${SETUP_URL}"
+  done
 fi
 
 # Wait for foundry to exit.
